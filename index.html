@@ -17,7 +17,7 @@
 }
 
 html, body {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body { 
@@ -67,6 +67,7 @@ body {
     width: 96%;
     max-width: 400px;
     text-align: center;
+    margin: 0 auto;
 }
 
 .all h2 {
@@ -115,7 +116,10 @@ body {
 }
 
 @media screen and (max-width: 500px) {
-  .all { padding: 10px 15px; }
+  .all { 
+    padding: 10px 15px;
+    width: 85vw !important; 
+}
 }
 @media (max-width: 1000px) {
   body {
