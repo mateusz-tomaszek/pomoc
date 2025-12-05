@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07050cff">
+<link rel="icon" href="/icon.png" type="image/x-icon">
+<link rel="shortcut icon" href="/icon.png" type="image/x-icon">
+<title>Mateusz - Pomoc Zdalna</title>
+
+<style>
+@font-face {
+    font-family: 'FreeMono Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('FreeMono Regular'), url('FreeMono.woff') format('woff');
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+body { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; 
+    font-family: 'FreeMono Regular', monospace; 
+    color: #EDEEF4; 
+    background-color: #06040a;
+    background-image: radial-gradient(1200px 600px at 15% 10%, rgba(122,90,248,0.12), transparent 12%),
+                      radial-gradient(900px 500px at 80% 30%, rgba(99,62,199,0.10), transparent 10%),
+                      linear-gradient(180deg, rgba(6,4,10,1) 0%, rgba(8,6,14,1) 55%, rgba(4,3,8,1) 100%);
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    min-height: 100vh; 
+    width: 100vw; 
+}
+
+:root {
+  --accent: #8f6bff;
+  --accent-2: #6bd3ff;
+  --muted: rgba(255,255,255,0.08);
+  --panel-bg: rgba(18,14,24,0.5);
+  --panel-border: rgba(143,107,255,0.14);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(143,107,255,0.95), rgba(107,211,255,0.85));
+  border-radius: 18px;
+  border: 2px solid rgba(6,4,10,1);
+}
+
+/* PANEL */
+.all {
+    background: linear-gradient(180deg, rgba(18,14,24,0.52), rgba(12,9,17,0.45));
+    border-radius: 14px;
+    box-shadow: 0 8px 40px rgba(2,1,6,0.6);
+    border: 1px solid var(--panel-border);
+    color: #E9EAEE;
+    padding: 30px 40px;
+    backdrop-filter: blur(5px);
+    width: 96%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.all h2 {
+    margin-bottom: 30px;
+    font-size: 1.8em;
+}
+
+/* BUTTON */
+.all button {
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.5);
+    color: white;
+    padding: 12px;
+    width: 100%;
+    font-family: 'FreeMono Regular';
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.all button:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.all button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 200%;
+    height: 200%;
+    border-radius: 30%;
+    background: rgba(255,255,255,0.2);
+    transition: transform 0.6s ease;
+    z-index: -1;
+}
+
+.all button:hover::after {
+    transform: translateX(-50%) scale(1);
+}
+
+@media screen and (max-width: 500px) {
+  .all { padding: 10px 15px; }
+}
+@media (max-width: 1000px) {
+  body {
+    background-image:
+      radial-gradient(1200px 600px at 15% 10%, rgba(122,90,248,0.42), transparent 12%), 
+      radial-gradient(900px 500px at 80% 30%, rgba(99,62,199,0.40), transparent 10%), 
+      linear-gradient(180deg, rgba(6,4,10,1) 0%, rgba(8,6,14,1) 55%, rgba(4,3,8,1) 100%);
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="all">
+    <h2>Potrzebujesz pomocy?</h2>
+    <button onclick="openTV()">Pomoc Zdalna</button>
+</div>
+
+
+<script>
+// --------------------------
+//   LINKI DO QUICKSUPPORT
+// --------------------------
+const TV = {
+    win: "https://download.teamviewer.com/download/TeamViewerQS_x64.exe",
+    mac: "https://download.teamviewer.com/download/TeamViewerQS.dmg",
+    linux: "https://download.teamviewer.com/download/teamviewer_qs.tar.gz",
+
+    android_market: "market://details?id=com.teamviewer.quicksupport.market",
+    android_http: "https://play.google.com/store/apps/details?id=com.teamviewer.quicksupport.market",
+
+    ios: "https://apps.apple.com/us/app/teamviewer-quicksupport/id661649585",
+
+    // potwierdzony scheme iOS
+    scheme: "tvsqcustomer1://"
+};
+
+// --------------------------
+//   DETEKCJA SYSTEMU
+// --------------------------
+function getOS() {
+    const ua = navigator.userAgent;
+
+    if (/Android/i.test(ua)) return "android";
+    if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
+    if (/Win/i.test(ua)) return "windows";
+    if (/Mac/i.test(ua)) return "mac";
+    if (/Linux/i.test(ua)) return "linux";
+
+    return "unknown";
+}
+
+// --------------------------
+//   OTWÓRZ QUICKSUPPORT
+// --------------------------
+function openTV() {
+    const os = getOS();
+    const start = Date.now();
+
+    window.location = TV.scheme;
+
+    // iOS nie robi fallbacku
+    if (os === "ios") return;
+
+    // fallback na desktop + android
+    setTimeout(() => {
+        if (Date.now() - start < 1300) downloadTV();
+    }, 1200);
+}
+
+// --------------------------
+//   POBIERZ QUICKSUPPORT
+// --------------------------
+function downloadTV() {
+    const os = getOS();
+
+    switch (os) {
+        case "android":
+            window.location = TV.android_market;
+            setTimeout(() => { window.location = TV.android_http; }, 800);
+            break;
+
+        case "ios":
+            window.location = TV.ios;
+            break;
+
+        case "windows":
+            window.location = TV.win;
+            break;
+
+        case "mac":
+            window.location = TV.mac;
+            break;
+
+        case "linux":
+            window.location = TV.linux;
+            break;
+
+        default:
+            window.location = "https://www.teamviewer.com/pl/";
+    }
+}
+</script>
+
+</body>
+</html>
