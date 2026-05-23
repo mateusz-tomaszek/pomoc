@@ -138,13 +138,11 @@ body {
     <button onclick="openTV()">Pomoc Zdalna</button>
 </div>
 
-
 <script>
 // --------------------------
-//   LINKI DO QUICKSUPPORT
+//   LINKI
 // --------------------------
 const TV = {
-    win: "https://download.teamviewer.com/download/TeamViewerQS_x64.exe",
     mac: "https://download.teamviewer.com/download/TeamViewerQS.dmg",
     linux: "https://download.teamviewer.com/download/teamviewer_qs.tar.gz",
 
@@ -153,8 +151,11 @@ const TV = {
 
     ios: "https://apps.apple.com/us/app/teamviewer-quicksupport/id661649585",
 
-    // potwierdzony scheme iOS
-    scheme: "tvsqcustomer1://"
+    // TeamViewer mobile
+    scheme: "tvsqcustomer1://",
+
+    // Windows Quick Assist
+    quickAssist: "ms-quick-assist:"
 };
 
 // --------------------------
@@ -173,53 +174,61 @@ function getOS() {
 }
 
 // --------------------------
-//   OTWÓRZ QUICKSUPPORT
+//   OTWÓRZ POMOC
 // --------------------------
 function openTV() {
     const os = getOS();
+
+    // WINDOWS → SZYBKA POMOC
+    if (os === "windows") {
+        window.location.href = TV.quickAssist;
+        return;
+    }
+
+    // ANDROID / IOS → TEAMVIEWER
     const start = Date.now();
 
-    window.location = TV.scheme;
+    window.location.href = TV.scheme;
 
-    // iOS nie robi fallbacku
+    // iOS bez fallbacku
     if (os === "ios") return;
 
-    // fallback na desktop + android
     setTimeout(() => {
-        if (Date.now() - start < 1300) downloadTV();
+        if (Date.now() - start < 1300) {
+            downloadTV();
+        }
     }, 1200);
 }
 
 // --------------------------
-//   POBIERZ QUICKSUPPORT
+//   POBIERANIE
 // --------------------------
 function downloadTV() {
     const os = getOS();
 
     switch (os) {
         case "android":
-            window.location = TV.android_market;
-            setTimeout(() => { window.location = TV.android_http; }, 800);
+            window.location.href = TV.android_market;
+
+            setTimeout(() => {
+                window.location.href = TV.android_http;
+            }, 800);
             break;
 
         case "ios":
-            window.location = TV.ios;
-            break;
-
-        case "windows":
-            window.location = TV.win;
+            window.location.href = TV.ios;
             break;
 
         case "mac":
-            window.location = TV.mac;
+            window.location.href = TV.mac;
             break;
 
         case "linux":
-            window.location = TV.linux;
+            window.location.href = TV.linux;
             break;
 
         default:
-            window.location = "https://www.teamviewer.com/pl/";
+            window.location.href = "https://www.teamviewer.com/pl/";
     }
 }
 </script>
